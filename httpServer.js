@@ -1,0 +1,26 @@
+const express = require('express')
+const database = require('./database/db')
+
+const testRoutes = require('./endpoint/test/TestRoute')
+
+const userRoutes = require('./endpoint/user/UserRoute')
+
+const app = express()
+
+/* Adding the routes */
+/* app.use('/', userRoutes); */
+app.use('/user', userRoutes);
+
+database.initDB(function(err,db){
+  if(db){
+    console.log("Anbindung von Datenbank erfolgreich");
+  }
+  else{
+    console.log("Anbindung von Datenbank gescheitert.")
+  }
+})
+
+const port = 8080
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
