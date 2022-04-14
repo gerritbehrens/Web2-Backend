@@ -5,11 +5,14 @@ const testRoutes = require('./endpoint/test/TestRoute')
 
 const userRoutes = require('./endpoint/user/UserRoute')
 
+const publicUsersRoute = require('./endpoint/user/PublicUsersRoute')
+
 const app = express()
 
 /* Adding the routes */
 /* app.use('/', userRoutes); */
-app.use('/user', userRoutes);
+/* app.use('/user', userRoutes); */
+app.use('/publicUsers', publicUsersRoute);
 
 database.initDB(function(err,db){
   if(db){

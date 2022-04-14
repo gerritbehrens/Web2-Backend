@@ -5,14 +5,12 @@ const UserSchema = new mongoose.Schema({
     id: Number,
     userID: { type: String, unique: true},
     userName: String,
-    email: String,
     password: String,
-    image: String,
     isAdministrator: { type: Boolean, default: false}
 }, {timestamps: true}
 );
 
-UserSchema.methods.whoAmI = function () {
+/* UserSchema.methods.whoAmI = function () {
     var output = this.userID
         ? "My name is " + this.userName
         : "I don't have a name";
@@ -41,7 +39,7 @@ UserSchema.methods.comparePassword = function (candidatePassword, next) {
         else
             next(null, isMatch);
     })
-}
+} */
 
 const User = mongoose.model("User", UserSchema);
 
