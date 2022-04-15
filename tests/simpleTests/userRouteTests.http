@@ -1,6 +1,12 @@
 // Rufe alle User ab. Zu Beginn sollten keine User in der Datenbank sein. 
 ###
-GET http://localhost:8080/publicUsers
+GET http://localhost:8080/publicUsers/
+###
+GET http://localhost:8080/publicUsers/hi
+###
+PUT  http://localhost:8080/publicUsers/hi
+###
+DELETE http://localhost:8080/publicUsers/hi
 
 // Lege ersten User an, der Administrator ist
 ###

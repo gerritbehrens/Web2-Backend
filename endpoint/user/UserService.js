@@ -1,4 +1,8 @@
+const req = require("express/lib/request");
+const res = require("express/lib/response");
 const User = require("./UserModel");
+
+
 /* const PublicUser = require("./PublicUsersRoute"); */
 
 function getUsers(callback){
@@ -17,9 +21,19 @@ function getUsers(callback){
 }
 
 function setUser(callback){
-    newUser = new User;
-    return callback(null, newUser);
-}
+    console.log("I am in setUser")
+
+    var users = new User();
+
+    /* console.log(req.body) */
+    users.userID = req.body.userID
+    /* user.userName = req.params[1]S
+    user.password = req.params[2]
+    user.isAdministrator = req.params[3] */
+        
+    return callback(null, users) ;
+}   
+
 
 /* function setUserID(user, newID){
     user.userID = newID;
