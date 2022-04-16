@@ -54,8 +54,8 @@ function setUser(req, callback){
                 password: req.body.password,
                 isAdministrator: req.body.isAdministrator
             });
-            user.save();
             n++;
+            user.save();
             return callback(null, user);
         }
         else{
@@ -74,7 +74,16 @@ function validUser(req, callback){
             if(result.length > 0){
                 console.log("Array includes Users")
 
-                result.forEach(element => {
+                var found = result.find(element => element.userID === req.body.userID)
+                if(found == null){
+                    return callback(null, true);
+                }
+                else{
+                    return callback(true, null);
+                }
+
+
+                /* result.forEach(element => {
                     var elementUserID = element.userID;
                     
                     console.log("Element in Schleife: " + element.userID)
@@ -82,10 +91,11 @@ function validUser(req, callback){
 
                     
                     if(elementUserID === req.body.userID){
+                        console.log("Ich bin in der VergleichOP")
                         return callback(true, element);
                     }
                     
-                });
+                }); */
                 //return callback(true, null);
             }
             else{
