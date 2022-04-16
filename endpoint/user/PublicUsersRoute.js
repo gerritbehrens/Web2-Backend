@@ -1,4 +1,5 @@
 var express = require('express');
+const req = require('express/lib/request');
 const router = require('./UserRoute');
 var publicRouter = express.Router();
 
@@ -19,23 +20,36 @@ publicRouter.get('/', function(req,res,next){
 )
 
 publicRouter.post("/", (req, res, next) => {
-    
-    userService.setUser(function(err,result){
-        console.log("Created User: " + result);
+
+    userService.setUser(req, function(err,result){
+        
         if(result)
         {
-            /* console.log(req.body) */
+            console.log("Created User: " + result);
             res.send(Object.values(result));
         }
         else{
-            res.send("Error while creating a user")
+            console.log("Error: Can not create User - Dobble Key Exeption.")
+            res.send("Error: Can not create User - Dobble Key Exeption.")
         }
     })  
 })
 
-/* publicRouter.get('/:id', (req,res) => {
-    res.send(`Get User With ID ${req.params.id}`)
-}) */
+publicRouter.get('/:id', (req,res) => {
+    //res.send(`User with User-ID ${req.params.id}`)
+    userService.searchUser(req, function(err, result){
+        
+        if(result)
+        {
+            console.log("Result: " + result);
+            res.send(`Searched User: ${Object.values(result)}`);
+        }
+        else{
+            console.log("User does not exist.");
+            res.send(`The User ${req.body.userID} does not exist.`);
+        }
+    })
+})
 
 /* publicRouter
     .route("/:id")

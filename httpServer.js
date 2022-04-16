@@ -13,9 +13,6 @@ const app = express()
 app.use(bodyParser.json());
 
 /* Adding the routes */
-/* app.use('/', userRoutes); */
-/* app.use('/user', userRoutes); */
-
 app.use('/publicUsers', publicUsersRoute);
 
 
