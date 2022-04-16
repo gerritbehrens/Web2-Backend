@@ -1,12 +1,6 @@
 // Rufe alle User ab. Zu Beginn sollten keine User in der Datenbank sein. 
 ###
 GET http://localhost:8080/publicUsers/
-###
-GET http://localhost:8080/publicUsers/hi
-###
-PUT  http://localhost:8080/publicUsers/hi
-###
-DELETE http://localhost:8080/publicUsers/hi
 
 // Lege ersten User an, der Administrator ist
 ###
@@ -19,6 +13,22 @@ Content-Type: application/json
     "password": "123",
     "isAdministrator": true
 }
+
+// Lege User ohne ID an
+###
+POST http://localhost:8080/publicUsers
+Content-Type: application/json
+
+{
+
+    "userName": "heinz",
+    "password": "hgi"
+    
+}
+
+// Rufe alle User ab. (Sollte nur admin kommen) 
+###
+GET http://localhost:8080/publicUsers/
 
 // Rufe den User mit UserID admin ab. 
 ###

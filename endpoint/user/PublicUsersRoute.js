@@ -1,10 +1,9 @@
 var express = require('express');
-const req = require('express/lib/request');
-const router = require('./UserRoute');
 var publicRouter = express.Router();
 
 var userService = require("./UserService")
 
+//Get all users in one output (JSON)
 publicRouter.get('/', function(req,res,next){
     userService.getUsers(function(err, result){
         console.log("Result: " + result);
@@ -19,64 +18,88 @@ publicRouter.get('/', function(req,res,next){
 }
 )
 
-publicRouter.post("/", (req, res, next) => {
+//Add a user to the database
+publicRouter.post("/", (req, res) => {
 
     userService.setUser(req, function(err,result){
         
-        if(result)
+        if(err == null && result)
         {
             console.log("Created User: " + result);
             res.send(Object.values(result));
         }
         else{
-            console.log("Error: Can not create User - Dobble Key Exeption.")
-            res.send("Error: Can not create User - Dobble Key Exeption.")
+            console.log(result)
+            res.send(result)
         }
     })  
 })
 
+//Get the user by it's userID (Searching for specific user)
 publicRouter.get('/:id', (req,res) => {
-    //res.send(`User with User-ID ${req.params.id}`)
-    userService.searchUser(req, function(err, result){
+
+    let splitArr = req.originalUrl.split("/");
+
+    let searchItem = splitArr[splitArr.length-1];
+
+    userService.searchUser(searchItem, function(err, result){
         
-        if(result)
+        if(err == null && result != null)
         {
-            console.log("Result: " + result);
-            res.send(`Searched User: ${Object.values(result)}`);
+            console.log("Result: ");
+            console.log(result)
+            res.send(result)
         }
         else{
-            console.log("User does not exist.");
-            res.send(`The User ${req.body.userID} does not exist.`);
+            console.log("The User '" + searchItem + "' does not exist.");
+            res.send("The User '" + searchItem + "' does not exist.");
         }
     })
 })
 
-/* publicRouter
-    .route("/:id")
-    .get((req,res) => {
-        res.send(`Get User With ID ${req.params.id}`)
-    })
-    .put((req, res) => {
-        res.send(`Update User with ID ${req.params.id}`)
-    })
-    .delete((req, res) => {
-        res.send(`Delete User with ID ${req.params.id}`)
-    }) */
+publicRouter.put("/:id", (req, res) => {
 
+    let splitArr = req.originalUrl.split("/");
+    
+    let updateItem = splitArr[splitArr.length-1];
 
-
-/* publicRouter.post('/', function(req,res,next){
-    userService.setUsers(function(err, result){
-        console.log("Result: " + result);
-        if(result)
-        {
-            res.send(Object.values(result));
+    userService.updateUser(req, updateItem, function(err, result){
+        if(result){
+            userService.searchUser(updateItem, function(err, result){
+                if(err == null && result != null)
+                    {
+                        console.log("Updated: ");
+                        console.log(result)
+                        res.send(result)
+                    }
+                else{
+                    console.log("The User '" + searchItem + "' does not exist.");
+                    res.send("The User '" + searchItem + "' does not exist.");
+                }
+            })
         }
         else{
-            res.send("Es gab Probleme");
+            res.send(err)
         }
     })
-}
-) */
+})
+
+publicRouter.delete("/:id", (req,res) => {
+    let splitArr = req.originalUrl.split("/");
+    
+    let deleteItem = splitArr[splitArr.length-1];
+
+    userService.deleteUser(deleteItem, function(err, result){
+        if(result === 1) {
+            res.status(200).json({ "Success": "User '" + deleteItem + "' was deleted!"});
+        }
+        else if(!err){
+            res.status(404).json({ "Error": "User '" + deleteItem + "' was not found!"});
+        }
+        else{
+            res.status(500).json({ "Error": err });
+        }
+    })
+})
 
 module.exports = publicRouter;
