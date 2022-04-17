@@ -66,20 +66,18 @@ publicRouter.put("/:id", (req, res) => {
     userService.updateUser(req, updateItem, function(err, result){
         if(result){
             userService.searchUser(updateItem, function(err, result){
-                if(err == null && result != null)
+                if(result)
                     {
-                        console.log("Updated: ");
-                        console.log(result)
-                        res.send(result)
+                        res.status(200).json({ "Success": "User '" + updateItem + "' was updated!"});
                     }
                 else{
                     console.log("The User '" + searchItem + "' does not exist.");
-                    res.send("The User '" + searchItem + "' does not exist.");
+                    res.status(404).json({ "Error": "User '" + updateItem + "' was not found!"});
                 }
             })
         }
         else{
-            res.send(err)
+            res.status(500).json({ "Error": err });
         }
     })
 })

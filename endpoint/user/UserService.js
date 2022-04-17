@@ -81,7 +81,7 @@ function deleteUser(deleteItem, callback){
                 callback(err, null);
             }
             else{
-                callback(null, result.deleteCount);
+                callback(null, result.deletedCount);
             }
         })
     }
