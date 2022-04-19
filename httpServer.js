@@ -13,10 +13,10 @@ app.use('/publicUsers', publicUsersRoute);
 /* Initiate the database connection */
 database.initDB(function(err,db){
   if(db){
-    console.log("Anbindung von Datenbank erfolgreich");
+    console.log("Connection Successful");
   }
   else{
-    console.log("Anbindung von Datenbank gescheitert.")
+    console.log("Error while establishing a connection.")
   }
 })
 

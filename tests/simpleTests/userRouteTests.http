@@ -34,6 +34,10 @@ GET http://localhost:8080/publicUsers/
 ###
 GET http://localhost:8080/publicUsers/admin
 
+// Rufe den User mit UserID admin ab. (Sollte Fehler kommen)
+###
+GET http://localhost:8080/publicUsers/peter
+
 // Lege zweiten User an. Prüfe UserID und UserName, ob die Angaben korrekt sind.
 ###
 POST http://localhost:8080/publicUsers

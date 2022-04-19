@@ -4,15 +4,14 @@ var publicRouter = express.Router();
 var userService = require("./UserService")
 
 //Get all users in one output (JSON)
-publicRouter.get('/', function(req,res,next){
+publicRouter.get('/', function(req,res){
     userService.getUsers(function(err, result){
-        console.log("Result: " + result);
         if(result)
         {
-            res.send(Object.values(result));
+            res.status(200).json(result);
         }
         else{
-            res.send("Es gab Probleme");
+            res.status(500).json("Error while searching for users");
         }
     })
 }
@@ -23,14 +22,15 @@ publicRouter.post("/", (req, res) => {
 
     userService.setUser(req, function(err,result){
         
-        if(err == null && result)
+        if(result)
         {
-            console.log("Created User: " + result);
-            res.send(Object.values(result));
+            res.status(200).json(result);
+        }
+        else if(err){
+            res.status(400).json({ "Error ": err});
         }
         else{
-            console.log(result)
-            res.send(result)
+            res.status(500).json({"Error ": err});
         }
     })  
 })
@@ -44,15 +44,12 @@ publicRouter.get('/:id', (req,res) => {
 
     userService.searchUser(searchItem, function(err, result){
         
-        if(err == null && result != null)
+        if(result)
         {
-            console.log("Result: ");
-            console.log(result)
-            res.send(result)
+            res.status(200).json(result);
         }
         else{
-            console.log("The User '" + searchItem + "' does not exist.");
-            res.send("The User '" + searchItem + "' does not exist.");
+            res.status(404).json({"Error ":err });
         }
     })
 })
@@ -65,20 +62,12 @@ publicRouter.put("/:id", (req, res) => {
 
     userService.updateUser(req, updateItem, function(err, result){
         if(result){
-            userService.searchUser(updateItem, function(err, result){
-                if(result)
-                    {
-                        res.status(200).json({ "Success": "User '" + updateItem + "' was updated!"});
-                    }
-                else{
-                    console.log("The User '" + searchItem + "' does not exist.");
-                    res.status(404).json({ "Error": "User '" + updateItem + "' was not found!"});
-                }
-            })
-        }
+            res.status(200).json({ "Success": "User '" + updateItem + "' was updated!"});
+        }  
         else{
-            res.status(500).json({ "Error": err });
+            res.status(404).json({ "Error": "User '" + updateItem + "' was not found!"});
         }
+            
     })
 })
 
