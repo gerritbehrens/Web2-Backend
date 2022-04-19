@@ -46,7 +46,8 @@ Content-Type: application/json
 {
     "userID": "manfred",
     "userName": "Manfred Mustermann",
-    "password": "asdf"
+    "password": "Test123"
+    
 }
 
 // Ändere beim zweiten User den User-Name. Zur Selektion des Users verwende die userID.

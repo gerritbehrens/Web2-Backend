@@ -93,13 +93,16 @@ function validUserCreate(req, callback){
         if(result)
         {   
             if(req.body.userID == null) return callback("UserID required to create a valid user", null);
+            
             if(result.length > 0){
                 let found = result.find(element => element.userID === req.body.userID)
                 if(found == null){
+                    if(req.body.userName == null) return callback("User name required to create a valid user", null);
+                    if(req.body.password == null) return callback("Password required to create a valid user", null);
                     return callback(null, true);
                 }
                 else{
-                    return callback("Can not create two user with the same userID", null);
+                    return callback("Can not create two users with the same userID", null);
                 }
             }
             else{
