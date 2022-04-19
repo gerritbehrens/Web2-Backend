@@ -39,7 +39,7 @@ function setUser(req, callback){
     validUserCreate(req, function(err, result){
         if(result){
             const user = new User({
-                userID: req.body.userID,
+                userID: req.body.userID.trim(),
                 userName: req.body.userName,
                 password: req.body.password,
                 isAdministrator: req.body.isAdministrator
@@ -90,12 +90,13 @@ function deleteUser(deleteItem, callback){
 /* Validates if a user is allowed to be created */
 function validUserCreate(req, callback){
     getUsers(function(err, result){
+
         if(result)
         {   
-            if(req.body.userID == null) return callback("UserID required to create a valid user", null);
+            if(req.body.userID == null || req.body.userID.trim().length == 0) return callback("UserID required to create a valid user", null);
             
             if(result.length > 0){
-                let found = result.find(element => element.userID === req.body.userID)
+                let found = result.find(element => element.userID === req.body.userID.trim())
                 if(found == null){
                     if(req.body.userName == null) return callback("User name required to create a valid user", null);
                     if(req.body.password == null) return callback("Password required to create a valid user", null);
