@@ -47,7 +47,6 @@ Content-Type: application/json
     "userID": "manfred",
     "userName": "Manfred Mustermann",
     "password": "Test123"
-    
 }
 
 // Ändere beim zweiten User den User-Name. Zur Selektion des Users verwende die userID.
@@ -56,7 +55,8 @@ PUT http://localhost:8080/publicUsers/manfred
 Content-Type: application/json
 
 {
-    "userName": "Manfred Müller"
+    "userName": "Manfred Müller",
+    "password": "NewPassword"
 }
 
 // Rufe alle User ab. Es sollten 2 User zurückgegeben werden.

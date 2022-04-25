@@ -44,8 +44,9 @@ function setUser(req, callback){
                 password: req.body.password,
                 isAdministrator: req.body.isAdministrator
             });
-            user.save();
-            return callback(null, user);
+            user.save(function(err,result) {
+                return callback(err, result)
+            });
         }
         else{
             return callback(err, null);
@@ -57,19 +58,28 @@ function setUser(req, callback){
 function updateUser(req, updateItem, callback){
     searchUser(updateItem, function(err, result){
         if(result){
-
-
-            User.findOneAndUpdate( { userID: updateItem }, req.body, null, function(err, result) {
-                if(err){
-                    callback(err, null );
-                }
-                else{
-                    callback(null, result)
-                }
-            })
+            var query = User.findOne( { userID: updateItem })
+             query.exec(function(err, result){
+                 if(result){
+                     Object.assign(result, req.body)
+                     result.save(function(err, result){
+                         return callback(null, result)
+                     })
+                 }
+             })
+            
+        //     User.findOneAndUpdate( { userID: updateItem }, req.body, null, function(err, result) {
+        //         if(err){
+        //             return callback(err, null );
+        //         }
+        //         else{
+        // //Gibt noch das klare Password in response mit!!!
+        //             return callback(null, result)
+        //         }
+        //     })
         }
         else{
-            callback(err, null)
+            return callback(err, null)
         }
     })
 }
@@ -79,10 +89,10 @@ function deleteUser(deleteItem, callback){
     
         User.deleteOne({ userID: deleteItem}, null, (err, result) => {
             if(err){
-                callback(err, null);
+                return callback(err, null);
             }
             else{
-                callback(null, result.deletedCount);
+                return callback(null, result.deletedCount);
             }
         })
 }
@@ -98,8 +108,6 @@ function validUserCreate(req, callback){
             if(result.length > 0){
                 let found = result.find(element => element.userID === req.body.userID.trim())
                 if(found == null){
-                    if(req.body.userName == null) return callback("User name required to create a valid user", null);
-                    if(req.body.password == null) return callback("Password required to create a valid user", null);
                     return callback(null, true);
                 }
                 else{

@@ -27,7 +27,7 @@ publicRouter.post("/", (req, res) => {
             res.status(200).json(result);
         }
         else if(err){
-            res.status(400).json({ "Error ": err});
+            res.status(409).json({ "Error ": err});
         }
         else{
             res.status(500).json({"Error ": err});
@@ -62,7 +62,7 @@ publicRouter.put("/:id", (req, res) => {
 
     userService.updateUser(req, updateItem, function(err, result){
         if(result){
-            res.status(200).json({ "Success": "User '" + updateItem + "' was updated!"});
+            res.status(200).json(result)//{ "Success": "User '" + updateItem + "' was updated!"});
         }  
         else{
             res.status(404).json({ "Error": "User '" + updateItem + "' was not found!"});
@@ -78,7 +78,7 @@ publicRouter.delete("/:id", (req,res) => {
 
     userService.deleteUser(deleteItem, function(err, result){
         if(result === 1) {
-            res.status(200).json({ "Success": "User '" + deleteItem + "' was deleted!"});
+            res.status(204).json({ "Success": "User '" + deleteItem + "' was deleted!"});
         }
         else if(!err){
             res.status(404).json({ "Error": "User '" + deleteItem + "' was not found!"});
