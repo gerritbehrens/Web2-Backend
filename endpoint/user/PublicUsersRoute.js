@@ -24,7 +24,7 @@ publicRouter.post("/", (req, res) => {
         
         if(result)
         {
-            res.status(200).json(result);
+            res.status(201).json(result);
         }
         else if(err){
             res.status(409).json({ "Error ": err});

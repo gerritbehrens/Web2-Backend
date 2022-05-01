@@ -19,14 +19,37 @@ function getUsers(callback){
 function searchUser(searchItem, callback){
     getUsers(function(err, result){
         if(result){
-
             let found = result.find(element => element.userID === searchItem)
 
                 if(found == null){
-                    return callback("The user '" + searchItem + "' was not found", null);
+                    if(found == null && searchItem == "admin"){
+                        console.log("Do not have admin account yet. Create it with default password")
+                        var adminUser = new User();
+                        adminUser.userID = "admin"
+                        adminUser.password = "123"
+                        adminUser.userName = "Default Administrator Account"
+                        adminUser.isAdministrator = true
+
+                        adminUser.save(function(err){
+                            if(err){
+                                console.log("Could not create default admin account: " + err)
+                                return callback("Could not create default admin account", null)
+                            }
+                            else{
+                                callback(null, adminUser)
+                            }
+                        })
+                    }
+                    else{
+                        return callback("The user '" + searchItem + "' was not found", null);
+
+                    }
                 }
                 else{
-                    return callback(null, found);
+                    
+                        return callback(null, found);
+                    
+                    
                 }
         }
         
@@ -67,16 +90,6 @@ function updateUser(req, updateItem, callback){
                      })
                  }
              })
-            
-        //     User.findOneAndUpdate( { userID: updateItem }, req.body, null, function(err, result) {
-        //         if(err){
-        //             return callback(err, null );
-        //         }
-        //         else{
-        // //Gibt noch das klare Password in response mit!!!
-        //             return callback(null, result)
-        //         }
-        //     })
         }
         else{
             return callback(err, null)
