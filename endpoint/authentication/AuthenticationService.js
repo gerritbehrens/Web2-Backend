@@ -25,7 +25,7 @@ function authenticate(userID, password, callback) {
                         var expiresAt = issuedAt + (expirationTime * 1000)
                         var privateKey = config.get('session.tokenKey')
                         let token = jwt.sign({ "user": user.userID, "username": user.userName, "isAdministrator": user.isAdministrator }
-                        , privateKey, { expiresIn: expiresAt, algorithm: 'HS256' })
+                            , privateKey, { expiresIn: expiresAt, algorithm: 'HS256' })
 
                         console.log("Token created: " + token)
                         return callback(null, token, user)

@@ -4,6 +4,7 @@ const database = require('./database/db')
 
 const publicUsersRoute = require('./endpoint/user/PublicUsersRoute')
 const authenticationRoutes = require('./endpoint/authentication/AuthenticationRoute')
+const userRoutes = require('./endpoint/user/UserRoute')
 
 //?????
 const userService = require('./endpoint/user/UserService')
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 /* Adding the routes */
 app.use('/publicUsers', publicUsersRoute);
 app.use('/authenticate', authenticationRoutes);
+app.use('/users', userRoutes);
 
 /* Initiate the database connection */
 database.initDB(function (err, db) {

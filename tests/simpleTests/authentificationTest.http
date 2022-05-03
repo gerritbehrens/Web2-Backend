@@ -1,4 +1,4 @@
-//Vergeschlagene Tests---------------------------------------------------------------------
+//Token tests ---------------------------------------------------------------------
 ###
 // Login mit Basic Authentication als admin mit korrekten Credentials admin:123
 ###
@@ -12,6 +12,8 @@ Authorization: Basic admin:1234
 
 
 @adminToken = {{loginAdminCorrect.response.headers.Authorization}}
+
+//User-Management tests ----------------------------------------------------
 ### Auflisten aller Nutzer ohne Token
 http://localhost:8080/users
 ### Auflisten aller Nutzer mit Token von admin
@@ -21,23 +23,32 @@ Authorization: {{adminToken}}
 POST http://localhost:8080/users
 Authorization: {{adminToken}}
 Content-Type: application/json
+
 {
-"userID": "manfred",
-"userName": "Manfred Mustermann",
-"password": "asdf"
+    "userID": "manfred",
+    "userName": "Manfred Mustermann",
+    "password": "asdf"
 }
+
 ### Abrufen des angelegten Users mit dem Admin-Token
 GET http://localhost:8080/users/manfred
 Authorization: {{adminToken}}
+
 // Login mit Basic Authentication als manfred mit korrekten Credentials admin:123
 ###
 # @name loginManfredCorrect
 GET http://localhost:8080/authenticate
 Authorization: Basic manfred:asdf
+
+
 @manfredToken = {{loginManfredCorrect.response.headers.Authorization}}
+
+
 ### Auflisten aller Nutzer mit Token von manfred
 GET http://localhost:8080/users
 Authorization: {{manfredToken}}
+
+//Forum tests ------------------------------------------------------------
 ### Auflisten aller Foren ohne Token
 GET http://localhost:8080/forumThreads
 // Lege ein erstes Forum an, der Administrator ist owner
