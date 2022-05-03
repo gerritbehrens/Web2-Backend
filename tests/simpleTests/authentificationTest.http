@@ -1,10 +1,10 @@
-//Token tests ---------------------------------------------------------------------
-###
+// Token tests ---------------------------------------------------------------------
 // Login mit Basic Authentication als admin mit korrekten Credentials admin:123
 ###
 # @name loginAdminCorrect
 GET http://localhost:8080/authenticate
 Authorization: Basic YWRtaW46MTIz
+
 // Login mit Basic Authentication als admin mit falschen Credentials
 ###
 GET http://localhost:8080/authenticate
@@ -13,12 +13,14 @@ Authorization: Basic admin:1234
 
 @adminToken = {{loginAdminCorrect.response.headers.Authorization}}
 
-//User-Management tests ----------------------------------------------------
+// User-Management tests ----------------------------------------------------
 ### Auflisten aller Nutzer ohne Token
 http://localhost:8080/users
+
 ### Auflisten aller Nutzer mit Token von admin
 http://localhost:8080/users
 Authorization: {{adminToken}}
+
 ###
 POST http://localhost:8080/users
 Authorization: {{adminToken}}
@@ -48,9 +50,10 @@ Authorization: Basic manfred:asdf
 GET http://localhost:8080/users
 Authorization: {{manfredToken}}
 
-//Forum tests ------------------------------------------------------------
+// Forum tests ------------------------------------------------------------
 ### Auflisten aller Foren ohne Token
 GET http://localhost:8080/forumThreads
+
 // Lege ein erstes Forum an, der Administrator ist owner
 ###
 # @name createForumRequest
@@ -61,12 +64,16 @@ Content-Type: application/json
 "name": "Mein erstes Forum",
 "description": "Das ist ein erstes Forum, das ich im Rahmen der Tests angelegt habe"
 }
+
 ### Speicher forum thread id für spätere REST-Calls
 @forumThreadID = {{createForumRequest.response.body._id}}
+
 ### Auflisten aller Foren ohne Token, nun sollte es ein Forum geben
 http://localhost:8080/forumThreads
+
 ### Abrufen von dem angelegten Forum-Thread
 http://localhost:8080/forumThreads/{{forumThreadID}}
+
 ### Ändere die description in dem existierenden Forum
 PUT http://localhost:8080/forumThreads/{{forumThreadID}}
 Authorization: {{adminToken}}
@@ -74,14 +81,18 @@ Content-Type: application/json
 {
 "description": "Das ist der neue Text, warum auch nicht."
 }
+
 ### Auflisten der Foren des aktuellen users
 GET http://localhost:8080/forumThreads/myForumThreads
 Authorization: {{adminToken}}
+
 ### Auflisten der Foren einen bestimmten user
 GET http://localhost:8080/forumThreads?ownerID=manfred
+
 ### Lösche den angelegten forum thread
 DELETE http://localhost:8080/forumThreads/{{forumThreadID}}
 Authorization: {{adminToken}}
+
 ### Lösche den User manfred
 DELETE http://localhost:8080/users/manfred
 Authorization: {{adminToken}}
