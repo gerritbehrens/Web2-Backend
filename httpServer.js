@@ -5,8 +5,8 @@ const database = require('./database/db')
 const publicUsersRoute = require('./endpoint/user/PublicUsersRoute')
 const authenticationRoutes = require('./endpoint/authentication/AuthenticationRoute')
 const userRoutes = require('./endpoint/user/UserRoute')
+const forumThreadRoutes = require('./endpoint/forumThreads/ForumThreadsRoute')
 
-//?????
 const userService = require('./endpoint/user/UserService')
 
 const app = express()
@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 app.use('/publicUsers', publicUsersRoute);
 app.use('/authenticate', authenticationRoutes);
 app.use('/users', userRoutes);
+app.use('/forumthreads', forumThreadRoutes);
 
 /* Initiate the database connection */
 database.initDB(function (err, db) {
