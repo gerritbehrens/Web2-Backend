@@ -62,8 +62,8 @@ Authorization: {{adminToken}}
 Content-Type: application/json
 
 {
-"name": "Mein erstes Forum",
-"description": "Das ist ein erstes Forum, das ich im Rahmen der Tests angelegt habe"
+    "name": "Mein erstes Forum",
+    "description": "Das ist ein erstes Forum, das ich im Rahmen der Tests angelegt habe"
 }
 
 ### Speicher forum thread id für spätere REST-Calls

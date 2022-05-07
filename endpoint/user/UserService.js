@@ -1,5 +1,7 @@
 const User = require("./UserModel");
 const jwt = require('jsonwebtoken')
+var config = require("config");
+
 /* Get's all userser in the db */
 function getUsers(callback) {
     User.find(function (err, result) {
@@ -57,6 +59,7 @@ function searchUser(searchItem, callback) {
 
 /* Creates a user-entity */
 function setUser(req, callback) {
+    console.log(req.body)
     validUserCreate(req, function (err, result) {
         if (result) {
             const user = new User({
@@ -131,10 +134,73 @@ function validUserCreate(req, callback) {
     })
 }
 
+//Middleware - authorized
+function isAuthenticated(req, res, next){
+    if(req.headers.authorization){
+        const base64Credentials = req.headers.authorization.split('.')[1];
+        const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+        const [ID] = credentials.split(',');
+
+        const userID = ID.split(':')[1].split('"')[1]
+
+        var token = req.headers.authorization.split(" ")[1]
+        searchUser(userID, function (err, user) {
+            
+            if (user) {
+                if (jwt.verify(token, config.get('session.tokenKey'))) {
+                    console.log("Token valid")
+                    next()
+                }
+                else {
+                    res.status(401).json({ "Error": "Not Authorized" })
+                }
+            }
+        })  
+    }
+    else {
+        res.status(400).json({ "Error": "Authorization header is missing" })
+    }
+    
+}
+//Middleware - Validation of the request via the token 
+function isAdmin(req, res, next) {
+
+
+    if (req.headers.authorization) {
+        //Decode and split Base64
+        const base64Credentials = req.headers.authorization.split('.')[1];
+        const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+        const [ID, name, isAdmin] = credentials.split(',');
+
+        //Extract userID- and isAdministrator-Value
+        const isAdministrator = isAdmin.split(':')[1]
+        const userID = ID.split(':')[1].split('"')[1]
+
+
+        searchUser(userID, function (err, user) {
+            //if user exists in Database and is Administrator show all users
+            if (user) {
+                if (isAdministrator.match("true")) {
+                    console.log("The user is Administrator")
+                    next()
+                }
+                else {
+                    res.status(401).json({ "Error": "Not Authorized" })
+                }
+            }
+        })
+    }
+    else {
+        res.status(400).json({ "Error": "Authorization header is missing" })
+    }
+}
+
 module.exports = {
     getUsers,
     setUser,
     searchUser,
     updateUser,
     deleteUser,
+    isAdmin,
+    isAuthenticated
 }
