@@ -79,6 +79,7 @@ http://localhost:8080/forumThreads/{{forumThreadID}}
 PUT http://localhost:8080/forumThreads/{{forumThreadID}}
 Authorization: {{adminToken}}
 Content-Type: application/json
+
 {
 "description": "Das ist der neue Text, warum auch nicht."
 }

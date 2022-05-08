@@ -1,0 +1,149 @@
+### Re-test Meilenstein 1, es sollte der Standard-Admin in der Datenbank sein
+http://localhost:8080/publicUsers
+
+### Login mit Basic Authentication als admin mit korrekten Credentials admin:123
+# @name loginAdminCorrect
+GET http://localhost:8080/authenticate
+Authorization: Basic YWRtaW46MTIz
+
+@adminToken = {{loginAdminCorrect.response.headers.Authorization}}
+
+### Login mit Basic Authentication als admin mit falschen Credentials
+GET http://localhost:8080/authenticate
+Authorization: Basic admin:1234
+
+### Lege neuen user manfred an
+POST http://localhost:8080/users
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "userID": "manfred",
+    "userName": "Manfred Mustermann",
+    "password": "asdf"
+}
+
+### Abrufen des angelegten Users ohne Token
+GET http://localhost:8080/users/manfred
+
+### Abrufen des angelegten Users mit dem Admin-Token
+GET http://localhost:8080/users/manfred
+Authorization: {{adminToken}}
+
+### Login mit Basic Authentication als manfred mit korrekten Credentials manfred:asdf
+# @name loginManfredCorrect
+GET http://localhost:8080/authenticate
+Authorization: Basic bWFuZnJlZDphc2Rm
+
+@manfredToken = {{loginManfredCorrect.response.headers.Authorization}}
+
+### Auflisten aller Nutzer ohne Token
+http://localhost:8080/users
+
+### Auflisten aller Nutzer mit Token von admin
+http://localhost:8080/users
+Authorization: {{adminToken}}
+
+### Auflisten aller Nutzer mit Token von manfred
+http://localhost:8080/users
+Authorization: {{manfredToken}}
+
+
+
+
+
+////////////////////////// ForumThreads
+
+
+
+
+
+### Auflisten aller Foren ohne Token
+GET http://localhost:8080/forumThreads
+
+### Lege ein erstes Forum an, der Administrator ist owner
+# @name createFirstForumRequest
+POST http://localhost:8080/forumThreads
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Mein erstes Forum",
+    "description": "Das ist ein erstes Forum, das ich im Rahmen der Tests angelegt habe"
+}
+
+###
+@firstForumThreadID = {{createFirstForumRequest.response.body._id}}
+
+### Lege ein zweites Forum an, der Administrator ist owner
+# @name createSecondForumRequest
+POST http://localhost:8080/forumThreads
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Mein zweites Forum",
+    "description": "Das ist ein zweites Forum, das ich im Rahmen der Tests angelegt habe"
+}
+
+###
+@secondForumThreadID = {{createSecondForumRequest.response.body._id}}
+
+### Auflisten aller Foren ohne Token, nun sollte es zwei Foren geben
+http://localhost:8080/forumThreads
+
+### Abrufen von dem ersten angelegten Forum-Thread
+http://localhost:8080/forumThreads/{{firstForumThreadID}}
+
+### Abrufen von dem zweiten angelegten Forum-Thread
+http://localhost:8080/forumThreads/{{secondForumThreadID}}
+
+### Ändere die forumDescription in dem ersten Forum als admin
+PUT http://localhost:8080/forumThreads/{{firstForumThreadID}}
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "description": "Das ist der neue Text, warum auch nicht."
+}
+
+### Ändere die forumDescription in dem zweiten Forum als manfred
+PUT http://localhost:8080/forumThreads/{{firstForumThreadID}}
+Authorization: {{manfredToken}}
+Content-Type: application/json
+
+{
+    "description": "Das sollte nicht funktionieren."
+}
+
+### Auflisten der Foren des aktuellen users
+GET http://localhost:8080/forumThreads/myForumThreads
+Authorization: {{adminToken}}
+
+### Auflisten der Foren eines bestimmten user (Gibt noch kein Forum von Manfred)
+GET http://localhost:8080/forumThreads?ownerID=manfred
+
+###Lege Manfreds erstes Forum an
+POST http://localhost:8080/forumThreads
+Authorization: {{manfredToken}}
+Content-Type: application/json
+
+{
+    "name": "Manfreds erstes Forum",
+    "description": "Manfred war hier"
+}
+
+### Auflisten der Foren eines bestimmten user
+GET http://localhost:8080/forumThreads?ownerID=manfred
+
+### Lösche den ersten angelegten Forum-Thread mit richtigem Token
+DELETE http://localhost:8080/forumThreads/{{firstForumThreadID}}
+Authorization: {{adminToken}}
+
+### Lösche den zweiten angelegten Forum-Thread mit falschem Token
+DELETE http://localhost:8080/forumThreads/{{secondForumThreadID}}
+Authorization: {{manfredToken}}
+
+### Lösche den User manfred
+DELETE http://localhost:8080/users/manfred
+Authorization: {{adminToken}}

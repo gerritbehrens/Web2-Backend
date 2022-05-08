@@ -135,8 +135,8 @@ function validUserCreate(req, callback) {
 }
 
 //Middleware - authorized
-function isAuthenticated(req, res, next){
-    if(req.headers.authorization){
+function isAuthenticated(req, res, next) {
+    if (req.headers.authorization) {
         const base64Credentials = req.headers.authorization.split('.')[1];
         const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
         const [ID] = credentials.split(',');
@@ -145,22 +145,26 @@ function isAuthenticated(req, res, next){
 
         var token = req.headers.authorization.split(" ")[1]
         searchUser(userID, function (err, user) {
-            
             if (user) {
+                
                 if (jwt.verify(token, config.get('session.tokenKey'))) {
                     console.log("Token valid")
                     next()
                 }
-                else {
-                    res.status(401).json({ "Error": "Not Authorized" })
+                else{
+                    res.status(401).json( {"Error":"Not Authorized"})
                 }
             }
-        })  
+            if (err) {
+                console.log("Throwing Not Authorized becasue User does not Exist")
+                res.status(404).json({ "Error": "User does in req does not exist" })
+            }
+        })
     }
     else {
         res.status(400).json({ "Error": "Authorization header is missing" })
     }
-    
+
 }
 //Middleware - Validation of the request via the token 
 function isAdmin(req, res, next) {

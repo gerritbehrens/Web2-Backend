@@ -5,6 +5,7 @@ var userService = require("./UserService")
 
 //Get all users in the database
 router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, next) => {
+    console.log("DA DARF ER NICHTMAL HINKOMMEN!!! In Get all users in UserRoute")
     userService.getUsers(function (err, user) {
         if (user) {
             var resultBuffer = [];
@@ -17,7 +18,7 @@ router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, ne
             console.log(JSON.stringify(resultBuffer))
             res.status(200).json(resultBuffer)
         }
-        else {
+        else if(err) {
             res.status(500).json({ "Error": "There was a problem by perfoming this taks." });
         }
     })
@@ -84,6 +85,26 @@ router.delete("/:userID", userService.isAuthenticated, userService.isAdmin, (req
             res.status(500).json({"Error ": err});
         }
     })  
+})
+
+router.put("/:id", userService.isAuthenticated, userService.isAdmin, (req, res) => {
+
+    let splitArr = req.originalUrl.split("/");
+    
+    let updateItem = splitArr[splitArr.length-1];
+
+    userService.updateUser(req, updateItem, function(err, result){
+        if(result){
+            const { id, userID, userName, isAdministrator, ...partialObject } = result
+                    const subset = {userID, userName, isAdministrator }
+                    console.log(JSON.stringify(subset))
+                    res.status(200).json(subset)
+        }  
+        else{
+            res.status(404).json({ "Error": "User '" + updateItem + "' was not found!"});
+        }
+            
+    })
 })
 
 

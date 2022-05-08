@@ -25,7 +25,7 @@ router.get('/', function (req, res, next) {
             }
             else {
                 console.log("Token has not been created, Error: " + err)
-                res.status(401).json({ "Error": "Failed to create token: Authentication failed" })
+                res.status(401).json({ "Error": "Failed to create token" })
             }
         })
     }
