@@ -5,7 +5,6 @@ var userService = require("./UserService")
 
 //Get all users in the database
 router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, next) => {
-    console.log("DA DARF ER NICHTMAL HINKOMMEN!!! In Get all users in UserRoute")
     userService.getUsers(function (err, user) {
         if (user) {
             var resultBuffer = [];
@@ -75,16 +74,17 @@ router.delete("/:userID", userService.isAuthenticated, userService.isAdmin, (req
 
     let deleteItem = splitArr[splitArr.length-1];
 
-    userService.deleteUser(deleteItem, function(err,result){
-        
-        if(result)
-        {
-            res.status(204).json()
+    userService.deleteUser(deleteItem, function(err, result){
+        if(result === 1) {
+            res.status(204).json({ "Success": "User '" + deleteItem + "' was deleted!"});
+        }
+        else if(!err){
+            res.status(404).json({ "Error": "User '" + deleteItem + "' was not found!"});
         }
         else{
-            res.status(500).json({"Error ": err});
+            res.status(500).json({ "Error": err });
         }
-    })  
+    })
 })
 
 router.put("/:id", userService.isAuthenticated, userService.isAdmin, (req, res) => {
