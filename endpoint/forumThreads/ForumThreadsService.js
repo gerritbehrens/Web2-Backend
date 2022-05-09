@@ -68,11 +68,11 @@ function searchForumsFromID(req, threadID, callback) {
     });
 }
 
-function updateForum(req, threadID, changeReqUserID, callback) {
+function updateForum(req, threadID, changeReqUserID, isAdministrator, callback) {
     //Search forum --> If exitst go on || else throw err
     searchForumsFromID(req, threadID, (err, result) => {
         if (result) {
-            if (result.ownerID === changeReqUserID) {
+            if (result.ownerID === changeReqUserID || isAdministrator == "true") {
                 var query = Forum.findOne({ _id: threadID })
                 query.exec((err, result) => {
                     if (result) {

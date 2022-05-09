@@ -101,12 +101,13 @@ router.put('/:forumThreadID', userService.isAuthenticated, function (req, res, n
     //Decode and split Base64
     const base64Credentials = req.headers.authorization.split('.')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-    const [ID] = credentials.split(',');
+    const [ID, name, isAdmin] = credentials.split(',');
 
-    //Extract userID
-    const userID = ID.split(':')[1].split('"')[1]
+        //Extract userID- and isAdministrator-Value
+        const isAdministrator = isAdmin.split(':')[1]
+        const userID = ID.split(':')[1].split('"')[1]
 
-    fThreadService.updateForum(req, threadID, userID, (err, result) => {
+    fThreadService.updateForum(req, threadID, userID, isAdministrator, (err, result) => {
         if (result && err == null) {
             res.status(200).json(result);
         }
@@ -133,7 +134,6 @@ router.delete('/:forumThreadID', userService.isAuthenticated, function (req, res
         //Extract userID- and isAdministrator-Value
         const isAdministrator = isAdmin.split(':')[1]
         const userID = ID.split(':')[1].split('"')[1]
-        console.log(isAdministrator)
 
     fThreadService.deleteForum(req, threadID, userID, isAdministrator,(err, result) => {
         if (result && !err) {
