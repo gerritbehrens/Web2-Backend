@@ -2,24 +2,26 @@ var express = require('express')
 var router = express.Router();
 
 var userService = require("./UserService")
+var Authentification = require("../utilities/isAuthenticated")
+var isAdmin = require("../utilities/isAdmin")
 
 //Get all users in the database
-router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, next) => {
+router.get('/', Authentification.isAuthenticated, isAdmin.isAdmin,  (req, res, next) => {
     userService.getUsers(function (err, user) {
         if (user) {
             filteredUsers = user.map(function (item) {
                 return { "userID": item.userID, "userName": item.userName, "isAdministrator": item.isAdministrator}
             })
-            res.status(200).json(filteredUsers)
+            return res.status(200).json(filteredUsers)
         }
         else if(err) {
-            res.status(500).json({ "Error": "There was a problem by perfoming this taks." });
+            return res.status(500).json({ "Error": "There was a problem by perfoming this taks." });
         }
     })
 })
 
 //Add a user to the database
-router.post("/", userService.isAuthenticated, userService.isAdmin, (req, res) => {
+router.post("/", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res) => {
     userService.setUser(req, function(err,user){
         
         if(user)
@@ -39,7 +41,7 @@ router.post("/", userService.isAuthenticated, userService.isAdmin, (req, res) =>
 })
 
 //Add a user to the database
-router.get("/:userID", userService.isAuthenticated, userService.isAdmin, (req, res) => {
+router.get("/:userID", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res) => {
 
     let splitArr = req.originalUrl.split("/");
 
@@ -63,7 +65,7 @@ router.get("/:userID", userService.isAuthenticated, userService.isAdmin, (req, r
     })  
 })
 
-router.delete("/:userID", userService.isAuthenticated, userService.isAdmin, (req, res) => {
+router.delete("/:userID", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res) => {
 
     let splitArr = req.originalUrl.split("/");
 
@@ -82,7 +84,7 @@ router.delete("/:userID", userService.isAuthenticated, userService.isAdmin, (req
     })
 })
 
-router.put("/:id", userService.isAuthenticated, userService.isAdmin, (req, res) => {
+router.put("/:id", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res) => {
 
     let splitArr = req.originalUrl.split("/");
     
@@ -101,7 +103,5 @@ router.put("/:id", userService.isAuthenticated, userService.isAdmin, (req, res) 
             
     })
 })
-
-
 
 module.exports = router;

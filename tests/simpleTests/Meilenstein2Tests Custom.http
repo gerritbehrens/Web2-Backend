@@ -23,7 +23,7 @@ Content-Type: application/json
     "password": "asdf"
 }
 
-### Abrufen des angelegten Users ohne Token
+### Abrufen des angelegten Users ohne Token --> 401
 GET http://localhost:8080/users/manfred
 
 ###

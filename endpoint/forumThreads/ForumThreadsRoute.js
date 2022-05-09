@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const userService = require('../user/UserService')
+const isAuth = require('../utilities/isAuthenticated')
 
 var fThreadService = require('./ForumThreadsService')
 router.get('/', function (req, res, next) {
@@ -31,7 +31,7 @@ router.get('/', function (req, res, next) {
 })
 
 
-router.get('/myForumThreads', userService.isAuthenticated, function (req, res, next) {
+router.get('/myForumThreads', isAuth.isAuthenticated, function (req, res, next) {
 
     //Decode and split Base64
     const base64Credentials = req.headers.authorization.split('.')[1];
@@ -69,7 +69,7 @@ router.get('/:forumThreadID', function (req, res, next) {
 
 
 
-router.post('/', userService.isAuthenticated, function (req, res, next) {
+router.post('/', isAuth.isAuthenticated, function (req, res, next) {
 
     //Decode and split Base64
     const base64Credentials = req.headers.authorization.split('.')[1];
@@ -92,7 +92,7 @@ router.post('/', userService.isAuthenticated, function (req, res, next) {
     })
 })
 
-router.put('/:forumThreadID', userService.isAuthenticated, function (req, res, next) {
+router.put('/:forumThreadID', isAuth.isAuthenticated, function (req, res, next) {
 
     let splitArr = req.originalUrl.split("/");
 
@@ -121,7 +121,7 @@ router.put('/:forumThreadID', userService.isAuthenticated, function (req, res, n
     })
 })
 
-router.delete('/:forumThreadID', userService.isAuthenticated, function (req, res, next) {
+router.delete('/:forumThreadID', isAuth.isAuthenticated, function (req, res, next) {
     let splitArr = req.originalUrl.split("/");
 
     let threadID = splitArr[splitArr.length - 1];
