@@ -22,7 +22,7 @@ function setForum(req, ownerID, callback) {
 
     forum.save(function (err, result) {
         if (result) {
-            return callback(err, result)
+            return callback(null, result)
         }
         else {
             return callback(err, null);
@@ -84,7 +84,7 @@ function updateForum(req, threadID, changeReqUserID, callback) {
                 })
             }
             else {
-                return callback({ "Error": "User is not allowed to perform this action" }, null)
+                return callback({ "Error": "Not Authorized" }, "Not Authorized")
             }
 
         }
@@ -94,11 +94,11 @@ function updateForum(req, threadID, changeReqUserID, callback) {
     })
 }
 
-function deleteForum(req, threadID, changeReqUserID, callback) {
+function deleteForum(req, threadID, changeReqUserID, isAdministrator, callback) {
     //Search forum --> If exitst go on || else throw err
     searchForumsFromID(req, threadID,  (err, result) => {
         if (result) {
-            if (result.ownerID === changeReqUserID) {
+            if (result.ownerID === changeReqUserID || isAdministrator == "true") {
                 Forum.deleteOne({ _id: threadID }, null, (err, result) => {
                     if (result) {
                         return callback(null, result)
@@ -109,7 +109,7 @@ function deleteForum(req, threadID, changeReqUserID, callback) {
                 })
             }
             else{
-                return callback( {"Error": "User is not allowed to perform this action"}, null)
+                return callback( {"Error": "Not Authorized"}, "Not Authorized")
             }
 
         }

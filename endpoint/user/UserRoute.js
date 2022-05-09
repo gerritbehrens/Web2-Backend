@@ -7,15 +7,10 @@ var userService = require("./UserService")
 router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, next) => {
     userService.getUsers(function (err, user) {
         if (user) {
-            var resultBuffer = [];
-
-            user.forEach(element => {
-                const { id, userID, userName, isAdministrator, ...partialObject } = element
-                const subset = { userID, userName, isAdministrator }
-                resultBuffer.push(subset)
-            });
-            console.log(JSON.stringify(resultBuffer))
-            res.status(200).json(resultBuffer)
+            filteredUsers = user.map(function (item) {
+                return { "userID": item.userID, "userName": item.userName, "isAdministrator": item.isAdministrator}
+            })
+            res.status(200).json(filteredUsers)
         }
         else if(err) {
             res.status(500).json({ "Error": "There was a problem by perfoming this taks." });
@@ -25,11 +20,11 @@ router.get('/', userService.isAuthenticated, userService.isAdmin,  (req, res, ne
 
 //Add a user to the database
 router.post("/", userService.isAuthenticated, userService.isAdmin, (req, res) => {
-    userService.setUser(req, function(err,result){
+    userService.setUser(req, function(err,user){
         
-        if(result)
+        if(user)
         {
-            const { id, userID, userName, isAdministrator, ...partialObject } = result
+            const { id, userID, userName, isAdministrator, ...partialObject } = user
                     const subset = {userID, userName, isAdministrator }
                     console.log(JSON.stringify(subset))
                     res.status(201).json(subset)

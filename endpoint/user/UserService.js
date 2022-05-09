@@ -161,8 +161,7 @@ function isAuthenticated(req, res, next) {
                     next()
                 }
                 if (err) {
-                    console.log("Throwing Not Authorized becasue User does not Exist")
-                    res.status(404).json({ "Error": "User does in req does not exist" })
+                    res.status(404).json({ "Error": "User '" + userID + "' does not exist" })
                 }
             })
 

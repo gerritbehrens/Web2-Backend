@@ -26,6 +26,15 @@ Content-Type: application/json
 ### Abrufen des angelegten Users ohne Token
 GET http://localhost:8080/users/manfred
 
+###
+PUT http://localhost:8080/users/manfred
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "userName": "Manfred Müller"
+}
+
 ### Abrufen des angelegten Users mit dem Admin-Token
 GET http://localhost:8080/users/manfred
 Authorization: {{adminToken}}
@@ -48,6 +57,8 @@ Authorization: {{adminToken}}
 http://localhost:8080/users
 Authorization: {{manfredToken}}
 
+#Ergebnis:
+#2 User (Manfred Müller) und admin 
 
 
 
@@ -98,7 +109,7 @@ http://localhost:8080/forumThreads/{{firstForumThreadID}}
 ### Abrufen von dem zweiten angelegten Forum-Thread
 http://localhost:8080/forumThreads/{{secondForumThreadID}}
 
-### Ändere die forumDescription in dem ersten Forum als admin
+### Ändere die forumDescription in dem ersten Forum als admin --> Funktioniert
 PUT http://localhost:8080/forumThreads/{{firstForumThreadID}}
 Authorization: {{adminToken}}
 Content-Type: application/json
@@ -107,7 +118,7 @@ Content-Type: application/json
     "description": "Das ist der neue Text, warum auch nicht."
 }
 
-### Ändere die forumDescription in dem zweiten Forum als manfred
+### Ändere die forumDescription in dem zweiten Forum als manfred --> Soll nicht gehen
 PUT http://localhost:8080/forumThreads/{{firstForumThreadID}}
 Authorization: {{manfredToken}}
 Content-Type: application/json
@@ -124,6 +135,7 @@ Authorization: {{adminToken}}
 GET http://localhost:8080/forumThreads?ownerID=manfred
 
 ###Lege Manfreds erstes Forum an
+# @name createManfredsForumRequest
 POST http://localhost:8080/forumThreads
 Authorization: {{manfredToken}}
 Content-Type: application/json
@@ -133,6 +145,9 @@ Content-Type: application/json
     "description": "Manfred war hier"
 }
 
+###
+@ManfredsForumThreadID = {{createManfredsForumRequest.response.body._id}}
+
 ### Auflisten der Foren eines bestimmten user
 GET http://localhost:8080/forumThreads?ownerID=manfred
 
@@ -140,10 +155,16 @@ GET http://localhost:8080/forumThreads?ownerID=manfred
 DELETE http://localhost:8080/forumThreads/{{firstForumThreadID}}
 Authorization: {{adminToken}}
 
-### Lösche den zweiten angelegten Forum-Thread mit falschem Token
+### Lösche den zweiten angelegten Forum-Thread mit falschem Token --> falscher Code
 DELETE http://localhost:8080/forumThreads/{{secondForumThreadID}}
 Authorization: {{manfredToken}}
 
 ### Lösche den User manfred
 DELETE http://localhost:8080/users/manfred
 Authorization: {{adminToken}}
+
+### Lösche Manfreds Forum als Admin --> Funktioniert nicht
+DELETE http://localhost:8080/forumThreads/{{ManfredsForumThreadID}}
+Authorization: {{adminToken}}
+
+#Ergebnis --> zweites Forum von admin + adminUser
