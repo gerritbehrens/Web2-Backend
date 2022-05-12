@@ -6,7 +6,6 @@ const User = require('../user/UserModel');
 
 function authenticate(userID, password, callback) {
     userService.searchUser(userID, function (err, user) {
-        console.log("I am searching a user to authenticate")
 
         if (user) {
             console.log("Found user, check password!")
