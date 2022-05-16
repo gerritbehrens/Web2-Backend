@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const isAuth = require('../utilities/isAuthenticated')
+const isAuth = require('../utils/isAuthenticated')
 
 var fThreadService = require('./ForumThreadsService')
 router.get('/', function (req, res, next) {

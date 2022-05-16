@@ -1,4 +1,3 @@
-const { numberParser } = require('config/parser');
 var mongoose = require('mongoose')
 
 const ForumSchema = new mongoose.Schema({

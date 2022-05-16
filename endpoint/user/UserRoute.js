@@ -2,8 +2,8 @@ var express = require('express')
 var router = express.Router();
 
 var userService = require("./UserService")
-var Authentification = require("../utilities/isAuthenticated")
-var isAdmin = require("../utilities/isAdmin")
+var Authentification = require("../utils/isAuthenticated")
+var isAdmin = require("../utils/isAdmin")
 
 //Get all users in the database
 router.get('/', Authentification.isAuthenticated, isAdmin.isAdmin,  (req, res, next) => {
