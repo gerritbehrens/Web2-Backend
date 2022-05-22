@@ -149,6 +149,19 @@ Content-Type: application/json
 @forumMessageID = {{createForumMessageRequest.response.body._id}}
 
 ###
+//Bearbeiten einer Nachricht
+PUT https://localhost/forumMessages/{{forumMessageID}}
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "forumThreadID": "{{forumThreadID}}",
+    "title": "Meine erste Forumnachricht Bearbeitet",
+    "text": "Das wollte ich nur kurz im Forum etwas bearbeiten."
+}
+
+
+###
 // Anlegen mit falscher Forum ID
 POST https://localhost/forumMessages
 Authorization: {{adminToken}}

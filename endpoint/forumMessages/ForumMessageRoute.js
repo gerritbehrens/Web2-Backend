@@ -76,6 +76,34 @@ router.post('/', isAuth.isAuthenticated, function (req, res, next) {
 
 })
 
+router.put('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
+
+    let splitArr = req.originalUrl.split("/");
+
+    let messageID = splitArr[splitArr.length - 1];
+
+    //Decode and split Base64
+    const base64Credentials = req.headers.authorization.split('.')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [ID, name, isAdmin] = credentials.split(',');
+
+    //Extract userID- and isAdministrator-Value
+    const isAdministrator = isAdmin.split(':')[1]
+    const userID = ID.split(':')[1].split('"')[1]
+
+    messageService.updateMessage(req, messageID, userID, isAdministrator, (err, result) => {
+        if (result && err == null) {
+            res.status(200).json(result);
+        }
+        else if (err && result === "Not Authorized") {
+            res.status(401).json(err)
+        }
+        else{
+            res.status(404).json(err)
+        }
+    })
+})
+
 router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
     console.log("Correct Route choosen")
 //Falsche ID
@@ -109,4 +137,5 @@ router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
         }
     })
 })
+
 module.exports = router;

@@ -43,8 +43,34 @@ function getMessages(forumThreadIDSearch, callback) {
     }
 }
 
+function updateMessage(req, messageID, changeReqUserID, isAdministrator, callback) {
+    //Search Message --> If exitst go on || else throw err
+    Message.find({ _id: messageID}, (err, result) => {
+        if (result) {
+            if (result.authorID === changeReqUserID || isAdministrator == "true") {
+                var query = Message.findOne({ _id: messageID })
+                query.exec((err, result) => {
+                    if (result) {
+                        Object.assign(result, req.body)
+                        result.save((err, result) => {
+                            return callback(null, result)
+                        })
+                    }
+                })
+            }
+            else {
+                return callback({ "Error": "Not Authorized" }, "Not Authorized")
+            }
+
+        }
+        else {
+            return callback({ "Error": "Forum does not exist" }, null)
+        }
+    })
+}
+
 function deleteMessage(messageID, changeReqUserID, isAdministrator, callback) {
-    //Search forum --> If exitst go on || else throw err
+    //Search Message --> If exitst go on || else throw err
     Message.find({ _id: messageID}, (err, result) => {
         if (result) {
             if (result.authorID === changeReqUserID || isAdministrator == "true") {
@@ -71,4 +97,5 @@ module.exports = {
     setMessage,
     getMessages,
     deleteMessage,
+    updateMessage
 }

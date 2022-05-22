@@ -1,10 +1,10 @@
 var mongoose = require('mongoose')
 
 const MessageSchema = new mongoose.Schema({
-    forumThreadID: { type: String, required: true },
+    forumThreadID: String,
     title: String,
     text: String,
-    authorID: { type: String, required: true}
+    authorID: String
 })
 
 const Message = mongoose.model("Message", MessageSchema);
