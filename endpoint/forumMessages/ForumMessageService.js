@@ -41,7 +41,6 @@ function getMessages(forumThreadIDSearch, callback) {
             }
         })
     }
-
 }
 
 function deleteMessage(messageID, changeReqUserID, isAdministrator, callback) {
