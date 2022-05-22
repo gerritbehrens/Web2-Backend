@@ -52,12 +52,12 @@ router.get('/myForumThreads', isAuth.isAuthenticated, function (req, res, next) 
 });
 
 router.get('/:forumThreadID/forumMessages', function (req, res, next) {
-
+    
     let searchItemID = req.params.forumThreadID
 
     fThreadService.searchForumsFromID(req, searchItemID, (err, result) => {
         if (result) {
-            forumMessages.getMessages(searchItemID, (err, msgs) =>{
+            forumMessages.getMessages(result, (err, msgs) =>{
                 if(msgs){
                     res.status(200).json(msgs)
                 }

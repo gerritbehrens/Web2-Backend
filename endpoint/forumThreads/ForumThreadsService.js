@@ -51,13 +51,11 @@ function searchForumsFromUser(req, ownerID, callback) {
 function searchForumsFromID(req, threadID, callback) {
     console.log(threadID)
     getForums((err, result) => {
-        console.log(result)
         if (result.length > 0) {
             let forum
             result.forEach(element => {
                 if (element._id == threadID) {
                     forum = element
-
                 }
             });
             if(forum == null){

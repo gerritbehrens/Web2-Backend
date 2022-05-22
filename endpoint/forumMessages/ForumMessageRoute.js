@@ -7,47 +7,42 @@ var fThreadService = require('../forumThreads/ForumThreadsService')
 
 //Get all ForumMessages
 router.get('/', function (req, res, next) {
+    
+    if (req.query.forumThreadID != null) {
+        console.log(req.query.forumThreadID)
+        console.log("Suche über parameter")
 
-    fThreadService.getForums((err, result) => {
-        if (result) {
-            let allMessages = []
-            result.forEach(element => {
-                messageService.getMessages(element, (err, msgs) => {
-                    if (msgs) {
-                        allMessages.push(msgs)
+        fThreadService.searchForumsFromID(req, req.query.forumThreadID, (err, result) => {
+            console.log(result)
+            if (result) {
+                messageService.getMessages(result, (err, msg) => {
+                    if (msg) {
+                        res.status(200).json(msg)
+                    }
+                    else{
+                        res.status(500).json({ "Error": err })
                     }
                 })
-            });
-            res.status(200).json(allMessages)
-        }
-    })
+                //res.status(200).json(result);
+            }
+            else{
+                console.log("I am here")
+                res.status(500).json({ "Error": err })
+            }
+        })
+    }
+    else {
+        console.log("Hohle jetzt alle Nachichten")
+        messageService.getMessages("all", (err, result) => {
+            if (result) {
+                res.status(200).json(result);
+            }
+            else if(err) {
+                res.status(500).json("Error while searching for Forum");
+            }
+        })
+    }
 })
-
-//Get all Messages from specific Forum
-router.get('/', function (req, res, next) {
-
-    let splitArr = req.originalUrl.split("/");
-
-    let searchItemID = splitArr[splitArr.length - 2];
-
-    fThreadService.searchForumsFromID(req, searchItemID, (err, result) => {
-        if (result) {
-            messageService.getMessages(result, (err, msg) => {
-                if (msg) {
-                    res.status(200).json(msg)
-                }
-                else if (err) {
-                    res.status(500).json(err)
-                }
-            })
-            res.status(200).json(result);
-        }
-        else if (err) {
-            console.log("I am here")
-            res.status(500).json(err)
-        }
-    })
-});
 
 router.post('/', isAuth.isAuthenticated, function (req, res, next) {
 
@@ -75,7 +70,7 @@ router.post('/', isAuth.isAuthenticated, function (req, res, next) {
             })
         }
         else if (err) {
-            res.status(404).json({"Error":err})
+            res.status(404).json({ "Error": err })
         }
     })
 
@@ -83,10 +78,14 @@ router.post('/', isAuth.isAuthenticated, function (req, res, next) {
 
 router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
     console.log("Correct Route choosen")
-    let splitArr = req.originalUrl.split("/");
+//Falsche ID
+    
+    splitArr = req.originalUrl.split("/");
 
     let messageID = splitArr[splitArr.length - 1];
-    console.log(messageID)
+    
+    
+    console.log(messageID + " in DeleteRoute")
 
     //Decode and split Base64
     const base64Credentials = req.headers.authorization.split('.')[1];
@@ -97,14 +96,12 @@ router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
     const isAdministrator = isAdmin.split(':')[1]
     const userID = ID.split(':')[1].split('"')[1]
 
-console.log(userID + isAdmin + messageID)
-
-    messageService.deleteMessage(messageID, userID, isAdministrator,(err, result) => {
-        
+    messageService.deleteMessage(messageID, userID, isAdministrator, (err, result) => {
+    
         if (result && !err) {
             res.status(204).json();
         }
-        else if(err && result == "Not Authorized"){
+        else if (err && result == "Not Authorized") {
             res.status(401).json(err);
         }
         else if (err && result == null) {

@@ -111,7 +111,7 @@ Content-Type: application/json
 ### Auflisten der Foren des Administrators
 GET https://localhost/forumThreads?ownerID=admin
 
-### Foren für admin auflisten (es sollte 1 sein)
+### Foren für manfred auflisten (es sollte keins sein)
 GET https://localhost/forumThreads?ownerID=manfred
 
 ###
