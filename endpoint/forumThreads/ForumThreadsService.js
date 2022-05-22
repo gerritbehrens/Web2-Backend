@@ -16,7 +16,7 @@ function getForums(callback) {
 function setForum(req, ownerID, callback) {
     const forum = new Forum({
         name: req.body.name,
-        describtion: req.body.describtion,
+        description: req.body.description,
         ownerID: ownerID
     });
 
@@ -51,6 +51,7 @@ function searchForumsFromUser(req, ownerID, callback) {
 function searchForumsFromID(req, threadID, callback) {
     console.log(threadID)
     getForums((err, result) => {
+        console.log(result)
         if (result.length > 0) {
             let forum
             result.forEach(element => {
@@ -59,6 +60,10 @@ function searchForumsFromID(req, threadID, callback) {
 
                 }
             });
+            if(forum == null){
+                console.log("Sollte hier sein")
+                return callback("ForumID does not exist", forum)
+            }
             return callback(null, forum)
         }
         else {

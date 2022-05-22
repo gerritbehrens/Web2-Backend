@@ -42,13 +42,11 @@ database.initDB(function (err, db) {
 
 //Error Handler
 app.use(function(req, res, next){
-  res.status(404).json("Sorry can not find that. This url does not exist.")
+  res.status(404).json({"Error":"Sorry can not find that. This url does not exist."})
 })
 
-app.get('/', (req, res) => { res.send('this is an secure server') });
-
 /* Establish connection to host and listen */
-server.listen(433, () => {console.log('listening on 443')})
+server.listen(443, () => {console.log('listening on 443')})
 // const port = 8080
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`)

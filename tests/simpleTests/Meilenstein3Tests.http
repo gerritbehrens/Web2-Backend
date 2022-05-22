@@ -2,7 +2,6 @@
 ###
 GET https://localhost/publicUsers
 
-///////////////////////////////////////////////////////////////////////////////Authentification-Tests
 
 // Login mit Basic Authentication mit korrekten Credentials admin:123
 ###
@@ -53,8 +52,9 @@ Content-Type: application/json
 https://localhost/users
 Authorization: {{adminToken}}
 
-///////////////////////////////////////////////////////////////////////////////ForumThreads-Tests
-
+//
+// Forum Tests
+//
 ### Auflisten aller Foren ohne Token
 GET https://localhost/forumThreads
 
@@ -76,8 +76,8 @@ Content-Type: application/json
 ### Auflisten aller Foren ohne Token
 GET https://localhost/forumThreads
 
-### Foren für admin auflisten (es sollte 1 sein)
-GET https://localhost/forumThreads
+### Auflisten der Foren des aktuellen users
+GET https://localhost/forumThreads/myForumThreads
 Authorization: {{adminToken}}
 
 // Login mit Basic Authentication als manfred mit korrekten Credentials admin:123
@@ -89,7 +89,7 @@ Authorization: Basic manfred:asdf
 @manfredToken = {{loginManfredCorrect.response.headers.Authorization}}
 
 ### Auflisten aller ForumThreads von manfred
-GET https://localhost/forumThreads
+GET https://localhost/forumThreads/myForumThreads
 Authorization: {{manfredToken}}
 
 ### Forum mit einer bestimmten ID abrufen
@@ -105,14 +105,14 @@ Authorization: {{adminToken}}
 Content-Type: application/json
 
 {
-    "forumDescription": "Das ist der neue Text"
+    "description": "Das ist der neue Text"
 }
 
 ### Auflisten der Foren des Administrators
-GET http://localhost:8080/forumThreads?ownerID=admin
+GET https://localhost/forumThreads?ownerID=admin
 
 ### Foren für admin auflisten (es sollte 1 sein)
-GET http://localhost:8080/forumThreads?ownerID=manfred
+GET https://localhost/forumThreads?ownerID=manfred
 
 ###
 # @name createForumRequest
@@ -125,18 +125,11 @@ Content-Type: application/json
     "description": "Das ist der Text von Manfred"
 }
 
-### Auflisten der Foren für den User manfred, diese Funktion sollte nur der Admin nutzen
+### Auflisten der Foren für den User manfred
 GET https://localhost/forumThreads?ownerID=manfred
-
-
-///////////////////////////////////////////////////////////////////////////////ForumMessages-Tests
 
 ### Forumnachrichten für einen bestimmten Forum-Thread abrufen
 GET https://localhost/forumThreads/{{forumThreadID}}/forumMessages
-
-### Lösche Forum-Thread
-DELETE  https://localhost/forumThreads/{{forumThreadID}}
-Authorization: {{adminToken}}
 
 ### Auflisten aller Forumnachrichten ohne Token
 https://localhost/forumMessages
@@ -149,8 +142,8 @@ Content-Type: application/json
 
 {
     "forumThreadID": "{{forumThreadID}}",
-    "messageTitle": "Meine erste Forumnachricht",
-    "messageText": "Das wollte ich nur kurz in das Forum schreiben."
+    "title": "Meine erste Forumnachricht",
+    "text": "Das wollte ich nur kurz in das Forum schreiben."
 }
 ###
 @forumMessageID = {{createForumMessageRequest.response.body._id}}
@@ -167,12 +160,18 @@ Content-Type: application/json
     "text": "Das wollte ich nur kurz in das Forum schreiben."
 }
 
+#FEHLT NOCH----------------------------------------------------------------
 ### Auflisten aller Forumnachrichten für Forum über Suchparameter
 GET https://localhost/forumMessages?forumThreadID={{forumThreadID}}
 
 ### Auflisten aller Forumnachrichten für Forum über nachgelagerte Suche
 GET https://localhost/forumThreads/{{forumThreadID}}/forumMessages
 
+#FEHLT NOCH----------------------------------------------------------------
 ### Löschen einer Forumnachrichten
 DELETE  https://localhost/forumMessages/{{forumMessageID}}
+Authorization: {{adminToken}}
+
+### Lösche Forum-Thread
+DELETE  https://localhost/forumThreads/{{forumThreadID}}
 Authorization: {{adminToken}}

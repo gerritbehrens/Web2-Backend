@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const isAuth = require('../utils/isAuthenticated')
+const forumMessages = require('../forumMessages/ForumMessageService')
 
 var fThreadService = require('./ForumThreadsService')
 router.get('/', function (req, res, next) {
@@ -27,7 +28,6 @@ router.get('/', function (req, res, next) {
             }
         })
     }
-
 })
 
 
@@ -51,6 +51,27 @@ router.get('/myForumThreads', isAuth.isAuthenticated, function (req, res, next) 
     })
 });
 
+router.get('/:forumThreadID/forumMessages', function (req, res, next) {
+
+    let searchItemID = req.params.forumThreadID
+
+    fThreadService.searchForumsFromID(req, searchItemID, (err, result) => {
+        if (result) {
+            forumMessages.getMessages(searchItemID, (err, msgs) =>{
+                if(msgs){
+                    res.status(200).json(msgs)
+                }
+                else{
+                    res.status(500).json(err)
+                }
+            })
+        }
+        else if (err) {
+            res.status(404).json(err)
+        }
+    })
+});
+
 router.get('/:forumThreadID', function (req, res, next) {
 
     let splitArr = req.originalUrl.split("/");
@@ -66,6 +87,8 @@ router.get('/:forumThreadID', function (req, res, next) {
         }
     })
 });
+
+
 
 
 
