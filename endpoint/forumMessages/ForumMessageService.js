@@ -69,7 +69,7 @@ function updateMessage(req, messageID, changeReqUserID, isAdministrator, callbac
 function deleteMessage(messageID, changeReqUserID, isAdministrator, callback) {
     //Search Message --> If exitst go on || else throw err
     Message.find({ _id: messageID }, (err, result) => {
-        if (result) {
+        if (result && result.length != 0) {
             if (result.authorID === changeReqUserID || isAdministrator == "true") {
                 Message.deleteOne({ _id: messageID }, null, (err, result) => {
                     if (result) {
@@ -85,7 +85,7 @@ function deleteMessage(messageID, changeReqUserID, isAdministrator, callback) {
             }
         }
         else if (err) {
-            return callback({ "Error": "Forum does not exist" }, null)
+            return callback({ "Error": "Message does not exist" }, null)
         }
     })
 }

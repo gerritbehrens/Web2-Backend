@@ -185,14 +185,12 @@ Content-Type: application/json
     "text": "2. Nachricht"
 }
 
-#FEHLT NOCH----------------------------------------------------------------
 ### Auflisten aller Forumnachrichten für Forum über Suchparameter
 GET https://localhost/forumMessages?forumThreadID={{forumThreadID}}
 
 ### Auflisten aller Forumnachrichten für Forum über nachgelagerte Suche
 GET https://localhost/forumThreads/{{forumThreadID}}/forumMessages
 
-#FEHLT NOCH----------------------------------------------------------------
 ### Löschen einer Forumnachrichten
 DELETE  https://localhost/forumMessages/{{forumMessageID}}
 Authorization: {{adminToken}}
