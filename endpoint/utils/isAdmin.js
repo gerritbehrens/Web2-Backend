@@ -1,5 +1,5 @@
-var express = require('express')
 var userService = require("../user/UserService")
+
 //Middleware - Validation of the request via the token 
 function isAdmin(req, res, next) {
 

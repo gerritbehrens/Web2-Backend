@@ -59,7 +59,7 @@ publicRouter.put("/:id", (req, res) => {
 
     userService.updateUser(req, updateItem, function (err, result) {
         if (result) {
-            res.status(200).json(result)//{ "Success": "User '" + updateItem + "' was updated!"});
+            res.status(200).json(result)
         }
         else {
             res.status(404).json({ "Error": "User '" + updateItem + "' was not found!" });

@@ -173,6 +173,18 @@ Content-Type: application/json
     "text": "Das wollte ich nur kurz in das Forum schreiben."
 }
 
+###
+// Anlegen 2. Message
+POST https://localhost/forumMessages
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+    "forumThreadID": "{{forumThreadID}}",
+    "title": "Meine zweite Forumnachricht",
+    "text": "2. Nachricht"
+}
+
 #FEHLT NOCH----------------------------------------------------------------
 ### Auflisten aller Forumnachrichten für Forum über Suchparameter
 GET https://localhost/forumMessages?forumThreadID={{forumThreadID}}
