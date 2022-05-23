@@ -47,7 +47,3 @@ app.use(function(req, res, next){
 
 /* Establish connection to host and listen */
 server.listen(443, () => {console.log('listening on 443')})
-// const port = 8080
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })

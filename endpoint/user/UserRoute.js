@@ -27,7 +27,6 @@ router.post("/", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res) =
         if (user) {
             const { id, userID, userName, isAdministrator, ...partialObject } = user
             const subset = { userID, userName, isAdministrator }
-            console.log(JSON.stringify(subset))
             res.status(201).json(subset)
         }
         else if (err) {
@@ -51,7 +50,6 @@ router.get("/:userID", Authentification.isAuthenticated, isAdmin.isAdmin, (req, 
         if (result) {
             const { id, userID, userName, isAdministrator, ...partialObject } = result
             const subset = { userID, userName, isAdministrator }
-            console.log(JSON.stringify(subset))
             res.status(200).json(subset)
         }
         else if (err) {
@@ -92,7 +90,6 @@ router.put("/:id", Authentification.isAuthenticated, isAdmin.isAdmin, (req, res)
         if (result) {
             const { id, userID, userName, isAdministrator, ...partialObject } = result
             const subset = { userID, userName, isAdministrator }
-            console.log(JSON.stringify(subset))
             res.status(200).json(subset)
         }
         else {

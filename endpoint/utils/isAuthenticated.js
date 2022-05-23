@@ -10,13 +10,11 @@ function isAuthenticated(req, res, next) {
         var token = req.headers.authorization.split(" ")[1]
         //Test if token could be a possible Token
         if (token == null) {
-            console.log("Token invalid")
             res.status(401).json({ "Error": "Token invalid" })
             return
         }
         //If Token candidate could be valid --> verify via JWT
         if (jwt.verify(token, config.get('session.tokenKey'))) {
-            console.log("Token valid")
 
             const base64Credentials = req.headers.authorization.split('.')[1];
             const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -32,7 +30,6 @@ function isAuthenticated(req, res, next) {
                     res.status(404).json({ "Error": "User '" + userID + "' does not exist" })
                 }
             })
-
         }
         else {
             res.status(401).json({ "Error": "Not Authorized" })

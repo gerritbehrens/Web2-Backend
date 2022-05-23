@@ -19,7 +19,6 @@ function isAdmin(req, res, next) {
             //if user exists in Database and is Administrator show all users
             if (user) {
                 if (isAdministrator.match("true")) {
-                    console.log("The user is Administrator")
                     next()
                 }
                 else {

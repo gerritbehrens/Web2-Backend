@@ -31,7 +31,6 @@ function getMessages(forumThreadIDSearch, callback) {
         })
     }
     else {
-        console.log(forumThreadIDSearch + " in getMessages")
         Message.find({ forumThreadID: forumThreadIDSearch._id }, (err, msgs) => {
             if (msgs) {
                 return callback(null, msgs)

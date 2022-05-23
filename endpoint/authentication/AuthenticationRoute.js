@@ -19,12 +19,10 @@ router.get('/', function (req, res, next) {
                     res.status(200).json({ "Success": "Token created successfully" })
                 }
                 else {
-                    console.log("User is null, even though a token has been created. Error: " + err)
                     res.status(404).json("User could not be found, even though a toekn has been created. Error: " + err)
                 }
             }
             else {
-                console.log("Token has not been created, Error: " + err)
                 res.status(401).json({ "Error": "Failed to create token" })
             }
         })

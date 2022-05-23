@@ -31,7 +31,6 @@ function setForum(req, ownerID, callback) {
 }
 
 function searchForumsFromUser(req, ownerID, callback) {
-    console.log(ownerID)
     Forum.find((err, result) => {
         if (result.length != 0) {
             let forumFromUser = []
@@ -49,7 +48,6 @@ function searchForumsFromUser(req, ownerID, callback) {
 }
 
 function searchForumsFromID(req, threadID, callback) {
-    console.log(threadID)
     getForums((err, result) => {
         if (result.length > 0) {
             let forum
@@ -59,13 +57,11 @@ function searchForumsFromID(req, threadID, callback) {
                 }
             });
             if (forum == null) {
-                console.log("Sollte hier sein")
                 return callback("ForumID does not exist", forum)
             }
             return callback(null, forum)
         }
         else {
-            console.log("Forum is isEmpty")
             return callback({ "Error": "No Forum found with this ID" }, null)
         }
     });
@@ -114,7 +110,6 @@ function deleteForum(req, threadID, changeReqUserID, isAdministrator, callback) 
             else {
                 return callback({ "Error": "Not Authorized" }, "Not Authorized")
             }
-
         }
         else {
             return callback({ "Error": "Forum does not exist" }, null)

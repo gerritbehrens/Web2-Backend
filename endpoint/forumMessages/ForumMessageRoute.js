@@ -9,11 +9,8 @@ var fThreadService = require('../forumThreads/ForumThreadsService')
 router.get('/', function (req, res, next) {
 
     if (req.query.forumThreadID != null) {
-        console.log(req.query.forumThreadID)
-        console.log("Suche über parameter")
 
         fThreadService.searchForumsFromID(req, req.query.forumThreadID, (err, result) => {
-            console.log(result)
             if (result) {
                 messageService.getMessages(result, (err, msg) => {
                     if (msg) {
@@ -23,16 +20,13 @@ router.get('/', function (req, res, next) {
                         res.status(500).json({ "Error": err })
                     }
                 })
-                //res.status(200).json(result);
             }
             else {
-                console.log("I am here")
                 res.status(500).json({ "Error": err })
             }
         })
     }
     else {
-        console.log("Hohle jetzt alle Nachichten")
         messageService.getMessages("all", (err, result) => {
             if (result) {
                 res.status(200).json(result);
@@ -61,7 +55,6 @@ router.post('/', isAuth.isAuthenticated, function (req, res, next) {
                     res.status(201).json(result)
                 }
                 else if (err) {
-                    console.log("Ich bin hier")
                     res.status(409).json({ "Error ": err });
                 }
                 else {
@@ -105,15 +98,10 @@ router.put('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
 })
 
 router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
-    console.log("Correct Route choosen")
-    //Falsche ID
 
     splitArr = req.originalUrl.split("/");
 
     let messageID = splitArr[splitArr.length - 1];
-
-
-    console.log(messageID + " in DeleteRoute")
 
     //Decode and split Base64
     const base64Credentials = req.headers.authorization.split('.')[1];
