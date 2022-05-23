@@ -7,7 +7,7 @@ var fThreadService = require('../forumThreads/ForumThreadsService')
 
 //Get all ForumMessages
 router.get('/', function (req, res, next) {
-    
+
     if (req.query.forumThreadID != null) {
         console.log(req.query.forumThreadID)
         console.log("Suche über parameter")
@@ -19,13 +19,13 @@ router.get('/', function (req, res, next) {
                     if (msg) {
                         res.status(200).json(msg)
                     }
-                    else{
+                    else {
                         res.status(500).json({ "Error": err })
                     }
                 })
                 //res.status(200).json(result);
             }
-            else{
+            else {
                 console.log("I am here")
                 res.status(500).json({ "Error": err })
             }
@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
             if (result) {
                 res.status(200).json(result);
             }
-            else if(err) {
+            else if (err) {
                 res.status(500).json("Error while searching for Forum");
             }
         })
@@ -98,7 +98,7 @@ router.put('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
         else if (err && result === "Not Authorized") {
             res.status(401).json(err)
         }
-        else{
+        else {
             res.status(404).json(err)
         }
     })
@@ -106,13 +106,13 @@ router.put('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
 
 router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
     console.log("Correct Route choosen")
-//Falsche ID
-    
+    //Falsche ID
+
     splitArr = req.originalUrl.split("/");
 
     let messageID = splitArr[splitArr.length - 1];
-    
-    
+
+
     console.log(messageID + " in DeleteRoute")
 
     //Decode and split Base64
@@ -125,7 +125,7 @@ router.delete('/:MessageID', isAuth.isAuthenticated, function (req, res, next) {
     const userID = ID.split(':')[1].split('"')[1]
 
     messageService.deleteMessage(messageID, userID, isAdministrator, (err, result) => {
-    
+
         if (result && !err) {
             res.status(204).json();
         }

@@ -1,8 +1,6 @@
 var userService = require('../user/UserService')
 var config = require("config")
 var jwt = require('jsonwebtoken')
-var axios = require('axios');
-const User = require('../user/UserModel');
 
 function authenticate(userID, password, callback) {
     userService.searchUser(userID, function (err, user) {

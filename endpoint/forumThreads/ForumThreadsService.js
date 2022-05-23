@@ -58,7 +58,7 @@ function searchForumsFromID(req, threadID, callback) {
                     forum = element
                 }
             });
-            if(forum == null){
+            if (forum == null) {
                 console.log("Sollte hier sein")
                 return callback("ForumID does not exist", forum)
             }
@@ -99,7 +99,7 @@ function updateForum(req, threadID, changeReqUserID, isAdministrator, callback) 
 
 function deleteForum(req, threadID, changeReqUserID, isAdministrator, callback) {
     //Search forum --> If exitst go on || else throw err
-    searchForumsFromID(req, threadID,  (err, result) => {
+    searchForumsFromID(req, threadID, (err, result) => {
         if (result) {
             if (result.ownerID === changeReqUserID || isAdministrator == "true") {
                 Forum.deleteOne({ _id: threadID }, null, (err, result) => {
@@ -111,8 +111,8 @@ function deleteForum(req, threadID, changeReqUserID, isAdministrator, callback) 
                     }
                 })
             }
-            else{
-                return callback( {"Error": "Not Authorized"}, "Not Authorized")
+            else {
+                return callback({ "Error": "Not Authorized" }, "Not Authorized")
             }
 
         }

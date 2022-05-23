@@ -52,16 +52,16 @@ router.get('/myForumThreads', isAuth.isAuthenticated, function (req, res, next) 
 });
 
 router.get('/:forumThreadID/forumMessages', function (req, res, next) {
-    
+
     let searchItemID = req.params.forumThreadID
 
     fThreadService.searchForumsFromID(req, searchItemID, (err, result) => {
         if (result) {
-            forumMessages.getMessages(result, (err, msgs) =>{
-                if(msgs){
+            forumMessages.getMessages(result, (err, msgs) => {
+                if (msgs) {
                     res.status(200).json(msgs)
                 }
-                else{
+                else {
                     res.status(500).json(err)
                 }
             })
@@ -126,9 +126,9 @@ router.put('/:forumThreadID', isAuth.isAuthenticated, function (req, res, next) 
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [ID, name, isAdmin] = credentials.split(',');
 
-        //Extract userID- and isAdministrator-Value
-        const isAdministrator = isAdmin.split(':')[1]
-        const userID = ID.split(':')[1].split('"')[1]
+    //Extract userID- and isAdministrator-Value
+    const isAdministrator = isAdmin.split(':')[1]
+    const userID = ID.split(':')[1].split('"')[1]
 
     fThreadService.updateForum(req, threadID, userID, isAdministrator, (err, result) => {
         if (result && err == null) {
@@ -138,7 +138,7 @@ router.put('/:forumThreadID', isAuth.isAuthenticated, function (req, res, next) 
 
             res.status(401).json(err)
         }
-        else{
+        else {
             res.status(404).json(err)
         }
     })
@@ -154,15 +154,15 @@ router.delete('/:forumThreadID', isAuth.isAuthenticated, function (req, res, nex
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [ID, name, isAdmin] = credentials.split(',');
 
-        //Extract userID- and isAdministrator-Value
-        const isAdministrator = isAdmin.split(':')[1]
-        const userID = ID.split(':')[1].split('"')[1]
+    //Extract userID- and isAdministrator-Value
+    const isAdministrator = isAdmin.split(':')[1]
+    const userID = ID.split(':')[1].split('"')[1]
 
-    fThreadService.deleteForum(req, threadID, userID, isAdministrator,(err, result) => {
+    fThreadService.deleteForum(req, threadID, userID, isAdministrator, (err, result) => {
         if (result && !err) {
             res.status(204).json();
         }
-        else if(err && result == "Not Authorized"){
+        else if (err && result == "Not Authorized") {
             res.status(401).json(err);
         }
         else if (err && result == null) {

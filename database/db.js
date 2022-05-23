@@ -6,27 +6,27 @@ let _db;
 const connectionString = config.get('db.connectionString');
 
 function initDB(callback) {
-    if(_db) {
-        if(callback){
+    if (_db) {
+        if (callback) {
             return callback(null, _db);
         }
-        else{
+        else {
             return _db;
         }
     }
-    else{
-        mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true});
+    else {
+        mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
         _db = mongoose.connection;
 
         _db.on('error', console.error.bind(console, 'connection error:'));
-        _db.prependOnceListener('open', function() {
+        _db.prependOnceListener('open', function () {
             console.log("Connection to database " + connectionString + " in DB.js " + _db);
             callback(null, _db);
         });
     }
 }
 
-function getDB(){
+function getDB() {
     return _db;
 }
 

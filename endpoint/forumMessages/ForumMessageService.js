@@ -25,7 +25,7 @@ function getMessages(forumThreadIDSearch, callback) {
             if (msgs) {
                 return callback(null, msgs)
             }
-            else if(err){
+            else if (err) {
                 return callback("Internal Server Error", null)
             }
         })
@@ -36,7 +36,7 @@ function getMessages(forumThreadIDSearch, callback) {
             if (msgs) {
                 return callback(null, msgs)
             }
-            else if(err){
+            else if (err) {
                 return callback("Internal Server Error", null)
             }
         })
@@ -45,7 +45,7 @@ function getMessages(forumThreadIDSearch, callback) {
 
 function updateMessage(req, messageID, changeReqUserID, isAdministrator, callback) {
     //Search Message --> If exitst go on || else throw err
-    Message.find({ _id: messageID}, (err, result) => {
+    Message.find({ _id: messageID }, (err, result) => {
         if (result) {
             if (result.authorID === changeReqUserID || isAdministrator == "true") {
                 var query = Message.findOne({ _id: messageID })
@@ -61,7 +61,6 @@ function updateMessage(req, messageID, changeReqUserID, isAdministrator, callbac
             else {
                 return callback({ "Error": "Not Authorized" }, "Not Authorized")
             }
-
         }
         else {
             return callback({ "Error": "Forum does not exist" }, null)
@@ -71,23 +70,23 @@ function updateMessage(req, messageID, changeReqUserID, isAdministrator, callbac
 
 function deleteMessage(messageID, changeReqUserID, isAdministrator, callback) {
     //Search Message --> If exitst go on || else throw err
-    Message.find({ _id: messageID}, (err, result) => {
+    Message.find({ _id: messageID }, (err, result) => {
         if (result) {
             if (result.authorID === changeReqUserID || isAdministrator == "true") {
                 Message.deleteOne({ _id: messageID }, null, (err, result) => {
                     if (result) {
                         return callback(null, result)
                     }
-                    else if(err){
+                    else if (err) {
                         return callback(err, null)
                     }
                 })
             }
-            else{
-                return callback( {"Error": "Not Authorized"}, "Not Authorized")
+            else {
+                return callback({ "Error": "Not Authorized" }, "Not Authorized")
             }
         }
-        else if(err){
+        else if (err) {
             return callback({ "Error": "Forum does not exist" }, null)
         }
     })

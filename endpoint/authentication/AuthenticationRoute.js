@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
                 res.header("Authorization", "Bearer " + token)
 
                 if (user) {
-                    res.status(200).json( {"Success": "Token created successfully"} )
+                    res.status(200).json({ "Success": "Token created successfully" })
                 }
                 else {
                     console.log("User is null, even though a token has been created. Error: " + err)
@@ -29,8 +29,8 @@ router.get('/', function (req, res, next) {
             }
         })
     }
-    else{
-        res.status(400).json( { "Error": "Request header for authentication is missing"})
+    else {
+        res.status(400).json({ "Error": "Request header for authentication is missing" })
     }
 })
 
