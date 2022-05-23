@@ -1,4 +1,3 @@
-const res = require('express/lib/response');
 const Message = require('./ForumMessageModel')
 
 function setMessage(req, userID, callback) {
