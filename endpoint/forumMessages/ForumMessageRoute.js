@@ -63,7 +63,7 @@ router.post('/', isAuth.isAuthenticated, function (req, res, next) {
             })
         }
         else if (err) {
-            res.status(404).json({ "Error": err })
+            res.status(400).json({ "Error": err })
         }
     })
 
